@@ -1,0 +1,30 @@
+overwrite: true
+schema: 
+  - ./src/local-schema.graphql
+  - ./node_modules/@octokit/graphql-schema/schema.graphql
+config:
+  namingConvention:
+    enumValues: 'keep'
+  preResolveTypes: true
+  skipTypename: true
+  content: "/* eslint-disable */\n\n // ⚠️⚠️⚠️⚠️⚠️\n // This file was automatically generated and should not be edited.\n // ⚠️⚠️⚠️⚠️⚠️\n"
+generates:
+  src/generated/github.ts:
+    plugins:
+      - 'typescript'
+      - 'fragment-matcher'
+  src/generated/introspection.json:
+    plugins:
+      - 'introspection'
+  src/:
+    documents: src/**/*.github.gql.ts
+    presetConfig:
+      baseTypesPath: 'generated/github.ts'
+    preset: 'near-operation-file'
+    config: 
+      documentMode: 'graphQLTag'
+      dedupeFragments: true
+    plugins:
+      - 'add'
+      - 'typescript-operations'
+      - 'typed-document-node'
